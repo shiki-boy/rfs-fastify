@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { CreateUserInput, LoginInput, RefreshTokenInput } from "./schema";
+import prisma from "@/dbClient";
 
 export async function registerUserHandler(
   request: FastifyRequest<{
@@ -11,8 +12,22 @@ export async function registerUserHandler(
   const body = request.body;
 
   try {
+    const userExists = await prisma.user.findFirst({
+      where: { email: body.email },
+    });
+
+    if (userExists) {
+      return reply.code(400).send({ detail: "This email already exists" });
+    }
+
+    const user = await prisma.user.create({
+      data: {
+        email: body.email,
+        name: body.name,
+      },
+    });
     // const user = await createUser(body);
-    // return reply.code(201).send(user);
+    return reply.code(201).send(user);
   } catch (e) {
     console.log(e);
     return reply.code(500).send(e);

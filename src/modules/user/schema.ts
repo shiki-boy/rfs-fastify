@@ -8,20 +8,15 @@ const userCore = {
       invalid_type_error: "Email must be a string",
     })
     .email(),
-  firstName: z.string(),
-  lastName: z.string(),
+  name: z.string(),
 };
 
 const createUserSchema = z.object({
   ...userCore,
-  password: z.string({
-    required_error: "Password is required",
-    invalid_type_error: "Password must be a string",
-  }),
 });
 
 const createUserResponseSchema = z.object({
-  _id: z.string(),
+  id: z.string(),
   ...userCore,
 });
 
@@ -36,7 +31,6 @@ const loginSchema = z.object({
       invalid_type_error: "Email must be a string",
     })
     .email(),
-  password: z.string(),
 });
 
 const loginResponseSchema = z.object({
@@ -51,7 +45,6 @@ export type LoginInput = z.infer<typeof loginSchema>;
 
 const userInfoResponseSchema = z.object({
   ...userCore,
-  _id: z.string(),
   fullName: z.string(),
 });
 

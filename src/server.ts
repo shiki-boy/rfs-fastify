@@ -10,8 +10,7 @@ import authenticate from "./authenticate";
 
 declare module "fastify" {
   export interface FastifyRequest {
-    // user: UserResultDoc; // this is a mongoose document
-    // userObj: IUser; // this is with virtuals
+    // user
     token: string;
   }
 
