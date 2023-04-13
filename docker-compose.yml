@@ -1,0 +1,30 @@
+version: '3.6'
+
+services:
+  postgres:
+    image: 'postgres:14-alpine'
+    volumes:
+      - './volumes/postgres:/var/lib/postgresql/data'
+    env_file: .env
+  
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - '8025:8025'
+    logging:
+      driver: none
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: development-build
+    restart: on-failure
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app # when the host performs changes, the container is in read only mode.
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
